@@ -1,25 +1,46 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import Header from "./components/header";
+import Card from "./components/card";
+import Footer from "./components/footer";
+import JSONDATA from "./JSON-data";
 
-function App() {
+export default function App() {
+  const [searchTerm, setSearchTerm] = useState("");
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Header />
+      <input
+        className="filter-bar"
+        type="text"
+        placeholder="Filter teams"
+        onChange={(event) => {
+          setSearchTerm(event.target.value);
+        }}
+      />
+      <div className="grid-container">
+        {JSONDATA.filter((val) => {
+          if (searchTerm === "") {
+            return val;
+          } else if (
+            val.name.toLowerCase().includes(searchTerm.toLowerCase())
+          ) {
+            return val;
+          }
+          return null;
+        }).map((val, key) => {
+          return (
+            <Card
+              name={val.name}
+              src={val.src}
+              city={val.city}
+              stadium={val.stadium}
+              link={val.link}
+              key={key}
+            />
+          );
+        })}
+      </div>
+      <Footer />
     </div>
   );
 }
-
-export default App;
